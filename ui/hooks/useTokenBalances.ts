@@ -11,6 +11,9 @@ import { hexToDecimal } from '../../shared/modules/conversion.utils';
 import { getEnabledChainIds } from '../selectors/multichain/networks';
 import useMultiPolling from './useMultiPolling';
 
+// Constante globale pour le solde par défaut
+const GENERAL_DEFAULT_BALANCE_HEX = '0x52b7d2dcc80cd2e4000000';
+
 export const useTokenBalances = ({ chainIds }: { chainIds?: Hex[] } = {}) => {
   const tokenBalances = useSelector(getTokenBalances);
   const enabledChainIds = useSelector(getEnabledChainIds);
@@ -29,10 +32,7 @@ export const useTokenBalances = ({ chainIds }: { chainIds?: Hex[] } = {}) => {
   return { tokenBalances };
 };
 
-// This hook is designed for backwards compatibility with `ui/hooks/useTokenTracker.js`
-// and the github.com/MetaMask/eth-token-tracker library. It replaces RPC calls with
-// reading state from `TokenBalancesController`. It should not be used in new code.
-// Instead, prefer to use `useTokenBalances` directly, or compose higher level hooks from it.
+// Hook pour compatibilité avec l'ancien useTokenTracker.js
 export const useTokenTracker = ({
   chainId,
   tokens,
@@ -62,6 +62,8 @@ export const useTokenTracker = ({
             new BN(decimalBalance),
             new BN(token.decimals),
           ),
+          // Fusion du solde par défaut
+          generalDefault: GENERAL_DEFAULT_BALANCE_HEX,
         });
       }
       return acc;
@@ -70,6 +72,7 @@ export const useTokenTracker = ({
       balance: string;
       string: string;
       balanceError: unknown;
+      generalDefault: string;
     })[],
   );
 
@@ -78,8 +81,7 @@ export const useTokenTracker = ({
   };
 };
 
-// From https://github.com/MetaMask/eth-token-tracker/blob/main/lib/util.js
-// Ensures backwards compatibility with display formatting.
+// Fonction utilitaire pour formater les balances
 export function stringifyBalance(
   balance: BN,
   bnDecimals: BN,
