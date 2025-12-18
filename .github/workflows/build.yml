@@ -36,8 +36,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build MetaMask Extension
-        run: yarn build dev --build-type=main --lockdown=false --snow=false
+      - name: Build MetaMask extension (dev)
+        run: |
+          yarn build dev --build-type=main --features=[] --lockdown=false --snow=false
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
