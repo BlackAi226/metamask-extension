@@ -39,7 +39,7 @@ jobs:
       - name: Build MetaMask extension
         run: |
           export BROWSER=chrome
-          yarn build dev --build-type=main --lockdown=false --snow=false
+          yarn build dev
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
