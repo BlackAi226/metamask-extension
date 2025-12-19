@@ -36,9 +36,10 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build MetaMask extension
+      - name: Build MetaMask extension (dev)
         run: |
           export BROWSER=chrome
+          export PLATFORM=extension
           yarn build dev
 
       - name: Upload build artifact
