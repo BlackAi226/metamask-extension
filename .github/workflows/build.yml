@@ -2,8 +2,7 @@ name: Build MetaMask Extension
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
 
 jobs:
@@ -12,6 +11,7 @@ jobs:
 
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
+      METAMASK_PLATFORM: chrome
 
     steps:
       - name: Checkout repository
@@ -20,26 +20,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24.11.0
+          node-version: 18.20.4
+          cache: yarn
 
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Prepare correct Yarn version
+      - name: Prepare Yarn
         run: corepack prepare yarn@4.10.3 --activate
-
-      - name: Verify versions
-        run: |
-          node --version
-          yarn --version
 
       - name: Install dependencies
         run: yarn install
 
-      - name: Build MetaMask extension (dev)
-        env:
-          METAMASK_BUILD_TARGET: chrome
-        run: yarn build dev
+      - name: Build MetaMask extension
+        run: yarn build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
