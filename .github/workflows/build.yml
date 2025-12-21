@@ -13,6 +13,10 @@ jobs:
       YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
       METAMASK_PLATFORM: chrome
       METAMASK_BUILD_TYPE: dev
+      INFURA_PROD_PROJECT_ID: dummy
+      SEGMENT_PROD_WRITE_KEY: dummy
+      APPLE_PROD_CLIENT_ID: dummy
+      GOOGLE_PROD_CLIENT_ID: dummy
 
     steps:
       - uses: actions/checkout@v4
