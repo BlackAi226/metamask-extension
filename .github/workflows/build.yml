@@ -35,5 +35,11 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build MetaMask
-        run: yarn build
+      - name: Build MetaMask (prod)
+        run: yarn build prod
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: metamask-extension-build
+          path: build/
