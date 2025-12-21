@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Setup MetaMask
+        run: yarn setup
+
       - name: Build MetaMask extension (dev)
         run: yarn build dev --browser chrome
 
