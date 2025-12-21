@@ -21,13 +21,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.20.4
-          cache: yarn
 
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Prepare Yarn
+      - name: Activate correct Yarn version
         run: corepack prepare yarn@4.10.3 --activate
+
+      - name: Verify versions
+        run: |
+          node --version
+          yarn --version
 
       - name: Install dependencies
         run: yarn install
