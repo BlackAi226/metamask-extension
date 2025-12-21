@@ -37,9 +37,7 @@ jobs:
         run: yarn install
 
       - name: Build MetaMask extension (dev)
-        run: |
-          export METAMASK_BUILD_TARGET=chrome
-          yarn build dev
+        run: yarn build dev --browser chrome
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
