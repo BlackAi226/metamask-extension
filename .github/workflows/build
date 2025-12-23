@@ -16,7 +16,7 @@ jobs:
       INFURA_PROD_PROJECT_ID: 8d5f86392a1040aea75c21f71f44629d
       SEGMENT_PROD_WRITE_KEY: dummy
       APPLE_PROD_CLIENT_ID: dummy
-      GOOGLE_PROD_CLIENT_ID: dummy
+      GOOGLE_PROD_CLIENT_ID: 756977845748-80qcdiadu5mffeuf7vcefmjjb5k8vn34.apps.googleusercontent.com
 
     steps:
       - uses: actions/checkout@v4
