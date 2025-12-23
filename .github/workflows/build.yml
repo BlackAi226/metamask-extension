@@ -45,5 +45,5 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: metamask-extension-build
-          path: build/
+          name: metamask-extension-prod
+          path: dist/chrome
