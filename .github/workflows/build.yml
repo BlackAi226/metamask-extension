@@ -12,11 +12,16 @@ jobs:
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
       METAMASK_PLATFORM: chrome
-      METAMASK_BUILD_TYPE: dev
+      METAMASK_BUILD_TYPE: prod
+      METAMASK_ENVIRONMENT: production
+      METAMASK_DEBUG: "false"
       INFURA_PROD_PROJECT_ID: 8d5f86392a1040aea75c21f71f44629d
       SEGMENT_PROD_WRITE_KEY: dummy
       APPLE_PROD_CLIENT_ID: dummy
       GOOGLE_PROD_CLIENT_ID: 756977845748-80qcdiadu5mffeuf7vcefmjjb5k8vn34.apps.googleusercontent.com
+      SENTRY_DSN: ""
+      SENTRY_DSN_DEV: ""
+      SENTRY_DSN_PERFORMANCE: ""
 
     steps:
       - uses: actions/checkout@v4
