@@ -22,6 +22,9 @@ jobs:
       SENTRY_DSN: ""
       SENTRY_DSN_DEV: ""
       SENTRY_DSN_PERFORMANCE: ""
+      USE_SNOW: "false"
+      APPLY_LAVAMOAT: "true"
+      FILE_NAMES: ""
 
     steps:
       - uses: actions/checkout@v4
