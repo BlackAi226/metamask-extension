@@ -19,8 +19,8 @@ jobs:
       SEGMENT_PROD_WRITE_KEY: dummy
       APPLE_PROD_CLIENT_ID: dummy
       GOOGLE_PROD_CLIENT_ID: 756977845748-80qcdiadu5mffeuf7vcefmjjb5k8vn34.apps.googleusercontent.com
-      SENTRY_DSN: ""
-      SENTRY_DSN_DEV: ""
+      SENTRY_DSN: https://fake@sentry.io/0000000
+      SENTRY_DSN_DEV: https://fake@sentry.io/0000000
       SENTRY_DSN_PERFORMANCE: ""
       USE_SNOW: "false"
       APPLY_LAVAMOAT: "true"
