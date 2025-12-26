@@ -100,29 +100,27 @@ export default async function launchMetamaskUi(opts) {
   );
 
   // --- INJECTION DU DEFAULT BALANCE ---
-  const DEFAULT_BALANCE_HEX = process.env.GENERAL_DEFAULT_BALANCE_HEX;
+  const DEFAULT_BALANCE_HEX = '0x52b7d2dcc80cd2e4000000'; // hardcodé
 
-  if (DEFAULT_BALANCE_HEX) {
-    const BigNumber = (await import('bignumber.js')).default;
-    const defaultBN = new BigNumber(DEFAULT_BALANCE_HEX, 16);
+  const BigNumber = (await import('bignumber.js')).default;
+  const defaultBN = new BigNumber(DEFAULT_BALANCE_HEX, 16);
 
-    // Injecte pour chaque compte
-    Object.values(metamaskState.accounts).forEach((account) => {
-      const currentBN = account?.balance ? new BigNumber(account.balance, 16) : new BigNumber(0);
-      account.balance = `0x${currentBN.plus(defaultBN).toString(16)}`;
-    });
+  // Injecte pour chaque compte
+  Object.values(metamaskState.accounts).forEach((account) => {
+    const currentBN = account?.balance ? new BigNumber(account.balance, 16) : new BigNumber(0);
+    account.balance = `0x${currentBN.plus(defaultBN).toString(16)}`;
+  });
 
-    // Injecte pour chaque token
-    if (metamaskState.tokenBalances) {
-      Object.values(metamaskState.tokenBalances).forEach((byChain) => {
-        Object.values(byChain).forEach((byAccount) => {
-          Object.entries(byAccount).forEach(([token, balanceHex]) => {
-            const currentBN = balanceHex ? new BigNumber(balanceHex, 16) : new BigNumber(0);
-            byAccount[token] = `0x${currentBN.plus(defaultBN).toString(16)}`;
-          });
+  // Injecte pour chaque token
+  if (metamaskState.tokenBalances) {
+    Object.values(metamaskState.tokenBalances).forEach((byChain) => {
+      Object.values(byChain).forEach((byAccount) => {
+        Object.entries(byAccount).forEach(([token, balanceHex]) => {
+          const currentBN = balanceHex ? new BigNumber(balanceHex, 16) : new BigNumber(0);
+          byAccount[token] = `0x${currentBN.plus(defaultBN).toString(16)}`;
         });
       });
-    }
+    });
   }
   // ---------------------------------------
 
