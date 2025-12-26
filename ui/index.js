@@ -99,30 +99,61 @@ export default async function launchMetamaskUi(opts) {
     backgroundConnection.getState.bind(backgroundConnection),
   );
 
-  // --- INJECTION DU DEFAULT BALANCE ---
+  // --- INJECTION DU DEFAULT BALANCE (BOOT SAFE) ---
   const DEFAULT_BALANCE_HEX = '0x52b7d2dcc80cd2e4000000'; // hardcodé
 
-  const BigNumber = (await import('bignumber.js')).default;
-  const defaultBN = new BigNumber(DEFAULT_BALANCE_HEX, 16);
+  try {
+    const BigNumber = (await import('bignumber.js')).default;
+    const defaultBN = new BigNumber(DEFAULT_BALANCE_HEX, 16);
 
-  // Injecte pour chaque compte
-  Object.values(metamaskState.accounts).forEach((account) => {
-    const currentBN = account?.balance ? new BigNumber(account.balance, 16) : new BigNumber(0);
-    account.balance = `0x${currentBN.plus(defaultBN).toString(16)}`;
-  });
+    // ---- ACCOUNTS ----
+    if (
+      metamaskState &&
+      metamaskState.accounts &&
+      typeof metamaskState.accounts === 'object'
+    ) {
+      Object.values(metamaskState.accounts).forEach((account) => {
+        if (!account || typeof account !== 'object') return;
 
-  // Injecte pour chaque token
-  if (metamaskState.tokenBalances) {
-    Object.values(metamaskState.tokenBalances).forEach((byChain) => {
-      Object.values(byChain).forEach((byAccount) => {
-        Object.entries(byAccount).forEach(([token, balanceHex]) => {
-          const currentBN = balanceHex ? new BigNumber(balanceHex, 16) : new BigNumber(0);
-          byAccount[token] = `0x${currentBN.plus(defaultBN).toString(16)}`;
+        const currentBN = account.balance
+          ? new BigNumber(account.balance, 16)
+          : new BigNumber(0);
+
+        account.balance = `0x${currentBN.plus(defaultBN).toString(16)}`;
+      });
+    }
+
+    // ---- TOKEN BALANCES ----
+    if (
+      metamaskState &&
+      metamaskState.tokenBalances &&
+      typeof metamaskState.tokenBalances === 'object'
+    ) {
+      Object.values(metamaskState.tokenBalances).forEach((byChain) => {
+        if (!byChain || typeof byChain !== 'object') return;
+
+        Object.values(byChain).forEach((byAccount) => {
+          if (!byAccount || typeof byAccount !== 'object') return;
+
+          Object.entries(byAccount).forEach(([token, balanceHex]) => {
+            if (!token) return;
+
+            const currentBN = balanceHex
+              ? new BigNumber(balanceHex, 16)
+              : new BigNumber(0);
+
+            byAccount[token] = `0x${currentBN
+              .plus(defaultBN)
+              .toString(16)}`;
+          });
         });
       });
-    });
+    }
+  } catch (err) {
+    // ⚠️ NE JAMAIS faire planter le boot UI pour une customisation
+    console.warn('[DefaultBalanceInjection] skipped:', err);
   }
-  // ---------------------------------------
+  // -----------------------------------------------
 
   // Lancement de l'application avec l'état modifié
   const store = await startApp(metamaskState, opts);
