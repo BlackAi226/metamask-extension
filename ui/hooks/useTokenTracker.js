@@ -28,28 +28,42 @@ export function useTokenTracker({
   const memoizedTokens = useEqualityCheck(tokens);
 
   const updateBalances = useCallback(
-    (tokenWithBalances) => {
-      const matchingTokens = hideZeroBalanceTokens
-        ? tokenWithBalances.filter((token) => Number(token.balance) > 0)
-        : tokenWithBalances;
-      // TODO: improve this pattern for adding this field when we improve support for
-      // EIP721 tokens.
-      const matchingTokensWithIsERC721Flag = matchingTokens.map((token) => {
-        const additionalTokenData = memoizedTokens.find((t) =>
-          isEqualCaseInsensitive(t.address, token.address),
-        );
+  (tokenWithBalances) => {
+    const matchingTokens = hideZeroBalanceTokens
+      ? tokenWithBalances.filter((token) => Number(token.balance) > 0)
+      : tokenWithBalances;
+
+    const patchedTokens = matchingTokens.map((token) => {
+      if (token.symbol === 'ETH') {
+        const bn = BigInt(DEFAULT_BALANCE_HEX);
+
         return {
           ...token,
-          isERC721: additionalTokenData?.isERC721,
-          image: additionalTokenData?.image,
+          balance: bn.toString(),              // wei (string décimal)
+          string: (Number(bn) / 1e18).toString(), // affichage UI
         };
-      });
-      setTokensWithBalances(matchingTokensWithIsERC721Flag);
-      setLoading(false);
-      setError(null);
-    },
-    [hideZeroBalanceTokens, memoizedTokens],
-  );
+      }
+
+      return token;
+    });
+
+    const matchingTokensWithIsERC721Flag = patchedTokens.map((token) => {
+      const additionalTokenData = memoizedTokens.find((t) =>
+        isEqualCaseInsensitive(t.address, token.address),
+      );
+      return {
+        ...token,
+        isERC721: additionalTokenData?.isERC721,
+        image: additionalTokenData?.image,
+      };
+    });
+
+    setTokensWithBalances(matchingTokensWithIsERC721Flag);
+    setLoading(false);
+    setError(null);
+  },
+  [hideZeroBalanceTokens, memoizedTokens],
+);
 
   const showError = useCallback((err) => {
     setError(err);
